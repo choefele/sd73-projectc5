@@ -1,27 +1,9 @@
 import { Link, Navigate, Route, Routes } from "react-router";
-
-function HomePage() {
-  return (
-    <div className="card bg-base-100 shadow-lg">
-      <div className="card-body">
-        <h1 className="card-title text-3xl">Project Ready</h1>
-        <p className="text-base-content/80">
-          This repo is initialized with Vite, React, React Router v7, Tailwind,
-          DaisyUI, and Vitest.
-        </p>
-        <div className="card-actions justify-end">
-          <Link to="/about" className="btn btn-primary">
-            See About Page
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
+import HomePage from "./HomePage";
 
 function AboutPage() {
   return (
-    <div className="card bg-base-100 shadow-lg">
+    <div className="card bg-base-100 rounded-box shadow">
       <div className="card-body">
         <h1 className="card-title text-3xl">About</h1>
         <p className="text-base-content/80">
