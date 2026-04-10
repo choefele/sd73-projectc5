@@ -1,4 +1,4 @@
-export default function DairyEntry({ title, date, imageUrl, content }) {
+export default function DiaryEntry({ title, date, imageUrl, content }) {
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     year: "numeric",
@@ -9,7 +9,7 @@ export default function DairyEntry({ title, date, imageUrl, content }) {
   return (
     <li className="list-row">
       <div>
-        <img className="size-10 rounded-box" src={imageUrl} />
+        <img className="size-10 rounded-box" src={imageUrl} alt={title} />
       </div>
       <div>
         <div>{formattedDate}</div>
