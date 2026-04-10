@@ -15,7 +15,7 @@ describe("localStorage API", () => {
     const entry = {
       id: "entry-1",
       title: "First Entry",
-      date: new Date("2026-04-10T09:00:00.000Z"),
+      date: new Date(2026, 3, 10, 9, 0, 0),
       imageUrl: "https://example.com/1.jpg",
       content: "hello world",
     };
@@ -34,21 +34,21 @@ describe("localStorage API", () => {
       {
         id: "entry-older",
         title: "Older",
-        date: new Date("2026-04-08T10:00:00.000Z"),
+        date: new Date(2026, 3, 8, 10, 0, 0),
         imageUrl: "https://example.com/older.jpg",
         content: "older",
       },
       {
         id: "entry-newer",
         title: "Newer",
-        date: new Date("2026-04-10T10:00:00.000Z"),
+        date: new Date(2026, 3, 10, 10, 0, 0),
         imageUrl: "https://example.com/newer.jpg",
         content: "newer",
       },
       {
         id: "entry-middle",
         title: "Middle",
-        date: new Date("2026-04-09T10:00:00.000Z"),
+        date: new Date(2026, 3, 9, 10, 0, 0),
         imageUrl: "https://example.com/middle.jpg",
         content: "middle",
       },
@@ -73,31 +73,31 @@ describe("localStorage API", () => {
     storeEntry({
       id: "entry-existing",
       title: "Existing",
-      date: new Date("2026-04-10T06:30:00.000Z"),
+      date: new Date(2026, 3, 10, 6, 30, 0),
       imageUrl: "https://example.com/existing.jpg",
       content: "existing",
     });
 
-    expect(doesEntryExist(new Date("2026-04-10T19:45:00.000Z"))).toBe(true);
+    expect(doesEntryExist(new Date(2026, 3, 10, 19, 45, 0))).toBe(true);
   });
 
   it("doesEntryExist returns false when no entry exists for that day", () => {
     storeEntry({
       id: "entry-existing",
       title: "Existing",
-      date: new Date("2026-04-10T06:30:00.000Z"),
+      date: new Date(2026, 3, 10, 6, 30, 0),
       imageUrl: "https://example.com/existing.jpg",
       content: "existing",
     });
 
-    expect(doesEntryExist(new Date("2026-04-11T06:30:00.000Z"))).toBe(false);
+    expect(doesEntryExist(new Date(2026, 3, 11, 6, 30, 0))).toBe(false);
   });
 
   it("removeAllEntries removes all entries", () => {
     storeEntry({
       id: "entry-1",
       title: "Entry",
-      date: new Date("2026-04-10T09:00:00.000Z"),
+      date: new Date(2026, 3, 10, 9, 0, 0),
       imageUrl: "https://example.com/1.jpg",
       content: "content",
     });
@@ -105,6 +105,6 @@ describe("localStorage API", () => {
     removeAllEntries();
 
     expect(loadEntries()).toEqual([]);
-    expect(doesEntryExist(new Date("2026-04-10T10:00:00.000Z"))).toBe(false);
+    expect(doesEntryExist(new Date(2026, 3, 10, 10, 0, 0))).toBe(false);
   });
 });

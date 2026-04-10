@@ -14,7 +14,14 @@ type StoredEntry = Omit<Entry, "date"> & {
 
 function readStoredEntries(): StoredEntry[] {
   const raw = localStorage.getItem(ENTRIES_STORAGE_KEY);
-  return raw ? (JSON.parse(raw) as StoredEntry[]) : [];
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed as StoredEntry[];
+  } catch {
+    localStorage.removeItem(ENTRIES_STORAGE_KEY);
+  }
+  return [];
 }
 
 function toEntry(raw: StoredEntry): Entry {
