@@ -66,14 +66,7 @@ describe("localStorage API", () => {
     );
 
     const timestamps = result.map((entry) => new Date(entry.date).getTime());
-    const asc = [...timestamps].sort((a, b) => a - b);
-    const desc = [...timestamps].sort((a, b) => b - a);
-    const isSortedAsc = timestamps.every((value, index) => value === asc[index]);
-    const isSortedDesc = timestamps.every(
-      (value, index) => value === desc[index],
-    );
-
-    expect(isSortedAsc || isSortedDesc).toBe(true);
+    expect(timestamps).toEqual([...timestamps].sort((a, b) => b - a));
   });
 
   it("doesEntryExist returns true when an entry already exists for the same day", () => {
