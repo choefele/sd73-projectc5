@@ -1,8 +1,9 @@
 import DiaryEntry from "./DiaryEntry";
+import { doesEntryExist, loadEntries, storeEntry } from "./lib/localStorage";
 
 const defaultEntries = [
   {
-    id: "1",
+    id: crypto.randomUUID(),
     title: "The Blue Coat at the Gate",
     date: new Date(2026, 1, 10),
     imageUrl:
@@ -11,7 +12,7 @@ const defaultEntries = [
       "Dear Diary, Today I saw the little dog again at the school gate. She wore her tiny blue coat and looked at everyone like she was the principal. I waved, and she wagged so hard she almost tipped over. I named her \u201cButton\u201d in my head.",
   },
   {
-    id: "2",
+    id: crypto.randomUUID(),
     title: "The Paw on My Shoe",
     date: new Date(2026, 1, 9),
     imageUrl:
@@ -20,7 +21,7 @@ const defaultEntries = [
       "Dear Diary, I had a bad day in math, but then I saw Button waiting by the gate, and everything felt better. She put one paw on my shoe like she understood. I shared a tiny piece of my plain cracker (don't tell Mom). She approved.",
   },
   {
-    id: "3",
+    id: crypto.randomUUID(),
     title: "Queen Poppy of Art Class",
     date: new Date(2026, 1, 8),
     imageUrl:
@@ -30,7 +31,15 @@ const defaultEntries = [
   },
 ];
 
-export default function HomePage({ entries = defaultEntries }) {
+export default function HomePage({ entries }) {
+  // Add some dummy data
+  defaultEntries.forEach((entry) => {
+    if (!doesEntryExist(entry.date)) {
+      storeEntry(entry);
+    }
+  });
+  entries ??= loadEntries();
+
   return (
     <>
       {entries.length === 0 && <p>No entries yet</p>}
