@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
-import AboutPage from './AboutPage';
 import Header from './components/Header';
 import ViewEntryModal from './components/ViewEntryModal';
-import HomePage from './HomePage';
+import AboutPage from './pages/AboutPage';
+import HomePage from './pages/HomePage';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
