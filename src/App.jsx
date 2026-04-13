@@ -1,6 +1,4 @@
-
 import { useState } from "react";
-
 import { Link, Navigate, Route, Routes } from "react-router";
 import HomePage from "./HomePage";
 
@@ -23,9 +21,8 @@ function AboutPage() {
   );
 }
 
-
 function App() {
-  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const entry = {
     title: "My First Diary Entry",
@@ -37,57 +34,66 @@ function App() {
   };
 
   const openModal = () => {
-    setSelectedEntry(entry);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setSelectedEntry(null);
+    setIsModalOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-base-200 p-6">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="mb-6 text-3xl font-bold">Diary App</h1>
+    <div className="min-h-screen bg-base-200">
+      <div className="navbar bg-base-100 shadow-sm">
+        <div className="flex-1">
+          <Link to="/" className="btn btn-ghost text-xl">
+            Diary App
+          </Link>
+        </div>
 
-        <div
-          className="card cursor-pointer bg-base-100 shadow-lg"
-          onClick={openModal}
-        >
-          <figure>
-            <img src={entry.image} alt={entry.title} className="h-64 w-full object-cover" />
-          </figure>
+        <div className="flex gap-2">
+          <Link to="/" className="btn btn-ghost">
+            Home
+          </Link>
+          <Link to="/about" className="btn btn-ghost">
+            About
+          </Link>
+          <button onClick={openModal} className="btn btn-primary">
+            New Entry
+          </button>
+        </div>
+      </div>
 
-          <div className="card-body">
-            <h2 className="card-title">{entry.title}</h2>
-            <p className="text-sm text-gray-500">{entry.date}</p>
+      <main className="mx-auto max-w-5xl p-6">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+
+      <dialog className={`modal ${isModalOpen ? "modal-open" : ""}`}>
+        <div className="modal-box max-w-2xl">
+          <img
+            src={entry.image}
+            alt={entry.title}
+            className="mb-4 h-64 w-full rounded-lg object-cover"
+          />
+
+          <h2 className="mb-2 text-2xl font-bold">{entry.title}</h2>
+          <p className="mb-4 text-sm text-gray-500">{entry.date}</p>
+          <p className="mb-6">{entry.content}</p>
+
+          <div className="modal-action">
+            <button onClick={closeModal} className="btn">
+              Close
+            </button>
           </div>
         </div>
 
-        {selectedEntry && (
-          <div
-  className="fixed inset-0 flex items-center justify-center bg-black/70 p-4 cursor-pointer"
-  onClick={closeModal}
->
-           <div
-  className="w-full max-w-2xl rounded-lg bg-base-100 p-6 shadow-xl"
-  onClick={(e) => e.stopPropagation()}
->
-              <img
-                src={selectedEntry.image}
-                alt={selectedEntry.title}
-                className="mb-4 h-64 w-full rounded object-cover"
-              />
-              <h2 className="mb-2 text-2xl font-bold">{selectedEntry.title}</h2>
-              <p className="mb-4 text-sm text-gray-500">{selectedEntry.date}</p>
-              <p className="mb-6">{selectedEntry.content}</p>
-
-              <button onClick={closeModal} className="btn btn-primary">
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+        <form method="dialog" className="modal-backdrop">
+          <button onClick={closeModal}>close</button>
+        </form>
+      </dialog>
     </div>
   );
 }
