@@ -12,7 +12,7 @@ describe("localStorage API", () => {
     removeAllEntries();
   });
 
-  it("createEntry returns a full entry with a generated id", async () => {
+  it("createEntry returns a full entry with a generated id", () => {
     const date = new Date(2026, 3, 10, 9, 0, 0);
     const entry = createEntry(
       "First Entry",
