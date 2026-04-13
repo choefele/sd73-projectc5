@@ -1,6 +1,7 @@
 const ENTRIES_STORAGE_KEY = "entriesv1";
 
-type Entry = {
+// The Entry type used in the app
+export type Entry = {
   id: string;
   title: string;
   date: Date;
@@ -8,6 +9,7 @@ type Entry = {
   content: string;
 };
 
+// The way the entries are stored in a stringify-compatible way
 type StoredEntry = Omit<Entry, "date"> & {
   date: string;
 };
@@ -24,49 +26,61 @@ function readStoredEntries(): StoredEntry[] {
   return [];
 }
 
-function toEntry(raw: StoredEntry): Entry {
-  return {
-    id: raw.id,
-    title: raw.title,
-    date: new Date(raw.date),
-    imageUrl: raw.imageUrl,
-    content: raw.content,
-  };
-}
-
-function toStoredEntry(entry: Entry): StoredEntry {
-  return {
-    ...entry,
-    date: entry.date.toISOString(),
-  };
-}
-
-function isSameDay(a: Entry["date"], b: Entry["date"]) {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
-}
-
 // Stores a new entry
 export function storeEntry(entry: Entry): void {
   const entries = loadEntries();
   entries.push(entry);
   entries.sort((a, b) => b.date.getTime() - a.date.getTime());
+
   localStorage.setItem(
     ENTRIES_STORAGE_KEY,
-    JSON.stringify(entries.map(toStoredEntry)),
+    JSON.stringify(
+      entries.map((entry: Entry) => {
+        return {
+          ...entry,
+          date: entry.date.toISOString(),
+        };
+      }),
+    ),
   );
 }
 
 // Loads all existing entries sorted by date
 export function loadEntries(): Entry[] {
-  return readStoredEntries().map(toEntry);
+  const raw = localStorage.getItem(ENTRIES_STORAGE_KEY);
+  if (!raw) return [];
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      const toEntry = (raw: StoredEntry) => {
+        return {
+          id: raw.id,
+          title: raw.title,
+          date: new Date(raw.date),
+          imageUrl: raw.imageUrl,
+          content: raw.content,
+        };
+      };
+
+      return (parsed as StoredEntry[]).map(toEntry);
+    }
+  } catch {
+    localStorage.removeItem(ENTRIES_STORAGE_KEY);
+  }
+  return [];
 }
 
 // Returns true if there's already an entry for the day of the given date
-export function doesEntryExist(date: Entry["date"]): boolean {
+export function doesEntryExist(date: Date): boolean {
+  const isSameDay = (a: Date, b: Date) => {
+    return (
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate()
+    );
+  };
+
   return loadEntries().some((entry) => isSameDay(entry.date, date));
 }
 
