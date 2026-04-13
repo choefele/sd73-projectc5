@@ -36,18 +36,6 @@ type StoredEntry = Omit<Entry, "date"> & {
   date: string;
 };
 
-function readStoredEntries(): StoredEntry[] {
-  const raw = localStorage.getItem(ENTRIES_STORAGE_KEY);
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed as StoredEntry[];
-  } catch {
-    localStorage.removeItem(ENTRIES_STORAGE_KEY);
-  }
-  return [];
-}
-
 // Stores a new entry
 export function storeEntry(entry: Entry): void {
   const entries = loadEntries();
