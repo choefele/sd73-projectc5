@@ -1,68 +1,68 @@
-import { Link, Navigate, Route, Routes } from "react-router";
-
-function HomePage() {
-  return (
-    <div className="card bg-base-100 shadow-lg">
-      <div className="card-body">
-        <h1 className="card-title text-3xl">Project Ready</h1>
-        <p className="text-base-content/80">
-          This repo is initialized with Vite, React, React Router v7, Tailwind,
-          DaisyUI, and Vitest.
-        </p>
-        <div className="card-actions justify-end">
-          <Link to="/about" className="btn btn-primary">
-            See About Page
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AboutPage() {
-  return (
-    <div className="card bg-base-100 shadow-lg">
-      <div className="card-body">
-        <h1 className="card-title text-3xl">About</h1>
-        <p className="text-base-content/80">
-          Routing is powered by React Router v7 and styles are provided by
-          Tailwind and DaisyUI.
-        </p>
-        <div className="card-actions justify-end">
-          <Link to="/" className="btn btn-outline">
-            Back Home
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useState } from "react";
 
 function App() {
-  return (
-    <div className="min-h-screen bg-base-200 p-6 md:p-10">
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
-        <header className="navbar rounded-box bg-base-100 px-4 shadow">
-          <div className="flex-1">
-            <span className="text-lg font-semibold">sd73-projectc5</span>
-          </div>
-          <nav className="flex gap-2">
-            <Link to="/" className="btn btn-ghost btn-sm">
-              Home
-            </Link>
-            <Link to="/about" className="btn btn-ghost btn-sm">
-              About
-            </Link>
-          </nav>
-        </header>
+  const [selectedEntry, setSelectedEntry] = useState(null);
 
-        <main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
+  const entry = {
+    title: "My First Diary Entry",
+    date: "2026-04-09",
+    image:
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80",
+    content:
+      "Today I started working on the entry detail modal. The goal is that when the user clicks on a card, a modal opens and shows the full diary entry.",
+  };
+
+  const openModal = () => {
+    setSelectedEntry(entry);
+  };
+
+  const closeModal = () => {
+    setSelectedEntry(null);
+  };
+
+  return (
+    <div className="min-h-screen bg-base-200 p-6">
+      <div className="mx-auto max-w-3xl">
+        <h1 className="mb-6 text-3xl font-bold">Diary App</h1>
+
+        <div
+          className="card cursor-pointer bg-base-100 shadow-lg"
+          onClick={openModal}
+        >
+          <figure>
+            <img src={entry.image} alt={entry.title} className="h-64 w-full object-cover" />
+          </figure>
+
+          <div className="card-body">
+            <h2 className="card-title">{entry.title}</h2>
+            <p className="text-sm text-gray-500">{entry.date}</p>
+          </div>
+        </div>
+
+        {selectedEntry && (
+          <div
+  className="fixed inset-0 flex items-center justify-center bg-black/70 p-4 cursor-pointer"
+  onClick={closeModal}
+>
+           <div
+  className="w-full max-w-2xl rounded-lg bg-base-100 p-6 shadow-xl"
+  onClick={(e) => e.stopPropagation()}
+>
+              <img
+                src={selectedEntry.image}
+                alt={selectedEntry.title}
+                className="mb-4 h-64 w-full rounded object-cover"
+              />
+              <h2 className="mb-2 text-2xl font-bold">{selectedEntry.title}</h2>
+              <p className="mb-4 text-sm text-gray-500">{selectedEntry.date}</p>
+              <p className="mb-6">{selectedEntry.content}</p>
+
+              <button onClick={closeModal} className="btn btn-primary">
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
