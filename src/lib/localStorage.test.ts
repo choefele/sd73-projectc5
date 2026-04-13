@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  createEntry,
   doesEntryExist,
   loadEntries,
   removeAllEntries,
@@ -9,6 +10,25 @@ import {
 describe("localStorage API", () => {
   beforeEach(() => {
     removeAllEntries();
+  });
+
+  it("createEntry returns a full entry with a generated id", () => {
+    const date = new Date(2026, 3, 10, 9, 0, 0);
+    const entry = createEntry(
+      "First Entry",
+      "https://example.com/1.jpg",
+      "hello world",
+      date,
+    );
+
+    expect(entry.id).toBeTypeOf("string");
+    expect(entry.id.length).toBeGreaterThan(0);
+    expect(entry).toMatchObject({
+      title: "First Entry",
+      date,
+      imageUrl: "https://example.com/1.jpg",
+      content: "hello world",
+    });
   });
 
   it("storeEntry stores a new entry", () => {
