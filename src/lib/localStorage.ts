@@ -9,6 +9,28 @@ export type Entry = {
   content: string;
 };
 
+export function createEntry(
+  title: string,
+  imageUrl: string,
+  content: string,
+  date: Date = new Date(Date.now()),
+): Entry {
+  const createEntryId = () => {
+    return (
+      crypto.randomUUID?.() ??
+      `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+    );
+  };
+
+  return {
+    id: createEntryId(),
+    title,
+    date,
+    imageUrl,
+    content,
+  };
+}
+
 // The way the entries are stored in a stringify-compatible way
 type StoredEntry = Omit<Entry, "date"> & {
   date: string;
