@@ -1,0 +1,14 @@
+import EntryCard from './EntryCard';
+
+export default function EntryList({ entries }) {
+  return (
+    <>
+      {entries.length === 0 && <p>No entries yet</p>}
+      <ul className="list bg-base-100 rounded-box shadow">
+        {entries.map((entry) => (
+          <EntryCard key={entry.id} entry={entry} />
+        ))}
+      </ul>
+    </>
+  );
+}
