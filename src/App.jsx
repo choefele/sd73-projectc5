@@ -1,99 +1,91 @@
-import { useState } from "react";
-import { Link, Navigate, Route, Routes } from "react-router";
-import HomePage from "./HomePage";
-
-function AboutPage() {
-  return (
-    <div className="card bg-base-100 rounded-box shadow">
-      <div className="card-body">
-        <h1 className="card-title text-3xl">About</h1>
-        <p className="text-base-content/80">
-          Routing is powered by React Router v7 and styles are provided by
-          Tailwind and DaisyUI.
-        </p>
-        <div className="card-actions justify-end">
-          <Link to="/" className="btn btn-outline">
-            Back Home
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useState } from 'react';
+import AddEntryModal from './components/AddEntryModal';
+import EntryList from './components/EntryList';
+import Header from './components/Header';
+import ViewEntryModal from './components/ViewEntryModal';
+import {
+  createEntry,
+  doesEntryExist,
+  loadEntries,
+  storeEntry,
+} from './lib/localStorage';
 
 function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const defaultEntries = [
+    {
+      id: crypto.randomUUID(),
+      title: 'The Blue Coat at the Gate',
+      date: new Date(2026, 1, 10),
+      imageUrl:
+        'https://images.pexels.com/photos/8715954/pexels-photo-8715954.jpeg',
+      content:
+        'Dear Diary, Today I saw the little dog again at the school gate. She wore her tiny blue coat and looked at everyone like she was the principal. I waved, and she wagged so hard she almost tipped over. I named her “Button” in my head.',
+    },
+    {
+      id: crypto.randomUUID(),
+      title: 'The Paw on My Shoe',
+      date: new Date(2026, 1, 9),
+      imageUrl:
+        'https://images.pexels.com/photos/8715954/pexels-photo-8715954.jpeg',
+      content:
+        "Dear Diary, I had a bad day in math, but then I saw Button waiting by the gate, and everything felt better. She put one paw on my shoe like she understood. I shared a tiny piece of my plain cracker (don't tell Mom). She approved.",
+    },
+    {
+      id: crypto.randomUUID(),
+      title: 'Queen Poppy of Art Class',
+      date: new Date(2026, 1, 8),
+      imageUrl:
+        'https://images.pexels.com/photos/8715954/pexels-photo-8715954.jpeg',
+      content:
+        'Dear Diary, In art class, I painted Button in her blue coat, only I added a gold crown because she deserves one. Ms. Rivera put my painting on the wall. After school, I showed the real Button, and she sneezed on my sock. That counts as a compliment.',
+    },
+  ];
 
-  const entry = {
-    title: "My First Diary Entry",
-    date: "2026-04-09",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80",
-    content:
-      "Today I started working on the entry detail modal. The goal is that when the user clicks on a card, a modal opens and shows the full diary entry.",
+  defaultEntries.forEach((entry) => {
+    if (!doesEntryExist(entry.date)) {
+      storeEntry(entry);
+    }
+  });
+
+  const [entries, setEntries] = useState(() => loadEntries());
+  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [isAddEntryModalOpen, setIsAddEntryModalOpen] = useState(false);
+  const [isViewEntryModalOpen, setIsViewEntryModalOpen] = useState(false);
+
+  const openAddEntryModal = () => setIsAddEntryModalOpen(true);
+  const closeAddEntryModal = () => setIsAddEntryModalOpen(false);
+  const closeViewEntryModal = () => setIsViewEntryModalOpen(false);
+
+  const handleEntryClick = (entry) => {
+    setSelectedEntry(entry);
+    setIsViewEntryModalOpen(true);
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const handleCreateEntry = ({ title, imageUrl, content }) => {
+    const newEntry = createEntry(title, imageUrl, content);
+    storeEntry(newEntry);
+    setEntries(loadEntries());
   };
 
   return (
     <div className="min-h-screen bg-base-200">
-      <div className="navbar bg-base-100 shadow-sm">
-        <div className="flex-1">
-          <Link to="/" className="btn btn-ghost text-xl">
-            Diary App
-          </Link>
-        </div>
-
-        <div className="flex gap-2">
-          <Link to="/" className="btn btn-ghost">
-            Home
-          </Link>
-          <Link to="/about" className="btn btn-ghost">
-            About
-          </Link>
-          <button onClick={openModal} className="btn btn-primary">
-            New Entry
-          </button>
-        </div>
-      </div>
+      <Header onAddEntryClick={openAddEntryModal} />
 
       <main className="mx-auto max-w-5xl p-6">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <EntryList entries={entries} onEntryClick={handleEntryClick} />
       </main>
 
-      <dialog className={`modal ${isModalOpen ? "modal-open" : ""}`}>
-        <div className="modal-box max-w-2xl">
-          <img
-            src={entry.image}
-            alt={entry.title}
-            className="mb-4 h-64 w-full rounded-lg object-cover"
-          />
+      <AddEntryModal
+        isOpen={isAddEntryModalOpen}
+        onClose={closeAddEntryModal}
+        onCreateEntry={handleCreateEntry}
+      />
 
-          <h2 className="mb-2 text-2xl font-bold">{entry.title}</h2>
-          <p className="mb-4 text-sm text-gray-500">{entry.date}</p>
-          <p className="mb-6">{entry.content}</p>
-
-          <div className="modal-action">
-            <button onClick={closeModal} className="btn">
-              Close
-            </button>
-          </div>
-        </div>
-
-        <form method="dialog" className="modal-backdrop">
-          <button onClick={closeModal}>close</button>
-        </form>
-      </dialog>
+      <ViewEntryModal
+        isOpen={isViewEntryModalOpen}
+        entry={selectedEntry}
+        onClose={closeViewEntryModal}
+      />
     </div>
   );
 }
