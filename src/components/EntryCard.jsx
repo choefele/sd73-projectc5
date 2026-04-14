@@ -1,4 +1,4 @@
-export default function EntryCard({ entry }) {
+export default function EntryCard({ entry, onClickEntry }) {
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -7,7 +7,7 @@ export default function EntryCard({ entry }) {
   }).format(entry.date);
 
   return (
-    <li className="list-row">
+    <li onClick={() => onClickEntry(entry)} className="list-row">
       <div>
         <img
           className="size-10 rounded-box"
