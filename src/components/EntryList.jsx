@@ -7,13 +7,15 @@ export default function EntryList({ entries, onClickEntry }) {
         <p>No entries yet</p>
       ) : (
         <ul className="list bg-base-100 rounded-box shadow">
-          {entries.map((entry) => (
-            <EntryCard
-              key={entry.id}
-              entry={entry}
-              onClickEntry={onClickEntry}
-            />
-          ))}
+          {[...entries]
+            .sort((a, b) => b.date - a.date)
+            .map((entry) => (
+              <EntryCard
+                key={entry.id}
+                entry={entry}
+                onClickEntry={onClickEntry}
+              />
+            ))}
         </ul>
       )}
     </>
