@@ -15,7 +15,7 @@ export default function EntryForm({ onSubmit }) {
 
     if (doesEntryExist(formatedDate)) {
       alert(
-        'You have already submited an entry in this date, please come back tomorrow!',
+        'You have already submited an entry in this date. Please come back tomorrow or select a different date!',
       );
       return;
     }
@@ -23,6 +23,11 @@ export default function EntryForm({ onSubmit }) {
     const newEntry = createEntry(title, imageUrl, content, formatedDate);
 
     onSubmit(newEntry);
+
+    setDate(inputFormatDate());
+    setTitle('');
+    setImageUrl('');
+    setContent('');
   };
 
   return (
