@@ -1,8 +1,8 @@
-import EntryDetails from "./EntryDetails";
+import EntryDetails from './EntryDetails';
 
 export default function ViewEntryModal({ isOpen, entry, onClose }) {
   return (
-    <dialog className={`modal ${isOpen ? "modal-open" : ""}`}>
+    <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
       <div className="modal-box max-w-2xl">
         <EntryDetails entry={entry} />
 
