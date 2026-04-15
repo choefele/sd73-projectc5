@@ -37,6 +37,7 @@ export default function EntryForm({ onSubmit }) {
         <input
           type="date"
           className="input input-bordered w-full mb-4"
+          max={inputFormatDate()}
           value={date}
           onChange={(event) => setDate(event.target.value)}
           required
