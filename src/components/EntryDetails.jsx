@@ -1,4 +1,4 @@
-import { inputFormatDate } from '../utils/DateConverter';
+import { inputFormatDate } from '../utils/dateConverter';
 
 export default function EntryDetails({ entry }) {
   if (!entry) {

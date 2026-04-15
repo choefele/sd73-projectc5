@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createEntry, doesEntryExist } from '../lib/localStorage';
-import { inputFormatDate } from '../utils/DateConverter';
+import { inputFormatDate } from '../utils/dateConverter';
 
 function checkDate(dateToCheck) {
   if (doesEntryExist(dateToCheck)) {
