@@ -2,25 +2,39 @@ import { useState } from 'react';
 import { createEntry, doesEntryExist } from '../lib/localStorage';
 import { inputFormatDate } from '../utils/DateConverter';
 
+function checkDate(dateToCheck) {
+  if (doesEntryExist(dateToCheck)) {
+    alert(
+      `You have already submited an entry in this date: ${inputFormatDate(dateToCheck)}. Please come back tomorrow or select a different date!`,
+    );
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export default function EntryForm({ onSubmit }) {
   const [date, setDate] = useState(inputFormatDate);
   const [title, setTitle] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [content, setContent] = useState('');
 
+  const handleDateChange = (dateValue) => {
+    setDate(dateValue);
+
+    const formattedDate = new Date(dateValue);
+    checkDate(formattedDate);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const formatedDate = new Date(date);
-
-    if (doesEntryExist(formatedDate)) {
-      alert(
-        'You have already submited an entry in this date. Please come back tomorrow or select a different date!',
-      );
+    const formattedDate = new Date(date);
+    if (checkDate(formattedDate)) {
       return;
     }
 
-    const newEntry = createEntry(title, imageUrl, content, formatedDate);
+    const newEntry = createEntry(title, imageUrl, content, formattedDate);
 
     onSubmit(newEntry);
 
@@ -39,7 +53,7 @@ export default function EntryForm({ onSubmit }) {
           className="input input-bordered w-full mb-4"
           max={inputFormatDate()}
           value={date}
-          onChange={(event) => setDate(event.target.value)}
+          onChange={(event) => handleDateChange(event.target.value)}
           required
         />
       </label>
