@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/sd73-projectc5/',
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'jsdom',
